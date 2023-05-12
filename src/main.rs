@@ -43,11 +43,14 @@ fn main() {
 
         let decimal = giga_years.as_secs_f64();
 
-        let nanos = giga_years.as_nanos();
-        let whole = nanos / 1_000_000_000;
-        let fract = nanos % 1_000_000_000;
         
-        print!("{whole:#b}.{fract:b} = {decimal:<20}\r");
+        // Scale it so that the year is divided into power-of-two sized pieces.
+        // Note that 1 << 30 is the closest power of two to a billion.
+        let nanos: u128 = ((giga_years * (1 << 30)) / 1_000_000_000).as_nanos();
+        let whole: u128 = nanos / (1 << 30);
+        let fract: u128 = nanos % (1 << 30);
+
+        print!("{whole:#b}.{fract:030b} = {decimal:<20}\r");
 
         match receiver.try_recv() {
             Ok(()) => break,
