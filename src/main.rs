@@ -57,6 +57,10 @@ fn main() {
             Err(TryRecvError::Empty) => {},
             Err(TryRecvError::Disconnected) => panic!("Channel disconnected"),
         }
+
+        std::thread::sleep(
+            Duration::from_millis(1)
+        );
     }
 
     // show cursor
